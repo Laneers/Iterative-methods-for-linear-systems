@@ -1,6 +1,6 @@
 5 -7 12 4 
-steps = 45
-tau = 0.0492157
-err = 6.53231e-08
-Norm_l1 C = 1.19686
-Norm_inf C = 0.950784
+steps = 44
+tau = 0.05
+err = 6.94961e-08
+Norm_l1 C = 1.2
+Norm_inf C = 0.95

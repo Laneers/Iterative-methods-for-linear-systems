@@ -129,6 +129,7 @@
     <ClCompile Include="SimpleIteration.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Jacobi.h" />
     <ClInclude Include="Norms.h" />
     <ClInclude Include="SimpleIteration.h" />
   </ItemGroup>

@@ -4,7 +4,6 @@
 #include "Norms.h"
 
 extern double EPS;
-int max_iterations = 1000;
 
 void Simple_iteration(const double* const* A_original, const double* b_original, double* x, const int n, const double tau, int* converged_step, \
     double* norm_C, const std::string output_filename) {
@@ -66,6 +65,7 @@ void Simple_iteration(const double* const* A_original, const double* b_original,
         x[i] = y[i];
     }
 
+    int max_iterations = 1000;
     double err;
     for (int step = 0; step < max_iterations; step++) {
         err = residual_norm(A_original, b_original, x, n);
