@@ -123,6 +123,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Jacobi.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Norms.cpp" />
     <ClCompile Include="SimpleIteration.cpp" />
