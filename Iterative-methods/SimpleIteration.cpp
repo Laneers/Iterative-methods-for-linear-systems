@@ -69,7 +69,7 @@ void Simple_iteration(const double* const* A_original, const double* b_original,
     double err;
     for (int step = 0; step < max_iterations; step++) {
         err = residual_norm(A_original, b_original, x, n);
-        if (err < EPS) {
+        if (err < EPS * ((1 - norm_C_inf) / norm_C_inf)) {
             std::cout << "Method converged in " << step << " iterations\n";
             *converged_step = step;
             std::ofstream out(output_filename);

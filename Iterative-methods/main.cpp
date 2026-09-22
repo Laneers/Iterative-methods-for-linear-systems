@@ -1,16 +1,17 @@
 ﻿#include <iostream>
 #include <fstream>
 #include <cmath>
+#include <string>
 
 #include "Norms.h"
 #include "SimpleIteration.h"
 #include "Jacobi.h"
 
-//double EPS = 1e-4;
-double EPS = 1e-7;
+double EPS = 1e-4;
+//double EPS = 1e-7;
 
 int main() {
-
+    //Reading from file
     std::string filename;
     std::cin >> filename;
 
@@ -43,6 +44,7 @@ int main() {
     }
     file.close();
 
+    //Checking accuracy for naming output file
     std::string accuracy;
     if (EPS == 1e-4) {
         accuracy = "1e-4";
@@ -50,10 +52,10 @@ int main() {
     if (EPS == 1e-7) {
         accuracy = "1e-7";
     }
+    std::string file_number = filename.substr(4, filename.length() - 8);
+    std::string output_filename = std::string("Simple_iteration") + file_number + '_' + accuracy + ".txt";
 
-    std::string output_filename = std::string("Simple_iteration") + filename[4] + '_' + accuracy + ".txt";
-
-    //Experimental determination of tau
+    //Experimental determination of tau for simple iteration method
     double tau_theor = 1 / matrix_norm_l1(A, n);
     double tau_limit = 2 * tau_theor;
 
@@ -82,14 +84,52 @@ int main() {
         std::cout << "\nExperimental tau: " << best_tau << " (converged in " << min_steps << ", norm_inf C = " << norm_C << ")\n\n";
     }
 
-    output_filename = std::string("Jacobi") + filename[4] + '_' + accuracy + ".txt";
+    //Jacobi method
+    output_filename = std::string("Jacobi") + file_number + '_' + accuracy + ".txt";
     Jacobi(A, b, x, n, &converged_step, &norm_C, output_filename);
 
+    //Tridiagonal matrix
+    int N;
+    std::cin >> N;
+    int n_big = 200 + N;
+
+    double* a = new double[n];
+    double* b = new double[n];
+    double* c = new double[n];
+    double* d = new double[n];
+
+    for (int i = 0; i < n_big; ++i) {
+        b[i] = 4.0;
+        a[i] = 1.0;
+        c[i] = 1.0;
+    }
+
+    for (int idx = 0; idx < n_big; ++idx) {
+        int i = idx + 1;
+
+        if (i == 1) {
+            d[idx] = 6.0;
+        }
+        else if (i == n_big) {
+            d[idx] = 9.0 - 3.0 * (n_big % 2);
+        }
+        else {
+            d[idx] = 10.0 - 2.0 * (i % 2);
+        }
+    }
+
+
+
+    //Destructors
     for (int i = 1; i <= n; i++) {
         delete[] A[i];
     }
     delete[] A;
     delete[] b;
     delete[] x;
+    delete[] a;
+    delete[] b;
+    delete[] c;
+    delete[] d;
     return 0;
 }
