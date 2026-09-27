@@ -64,6 +64,17 @@ void Simple_iteration(const double* const* A_original, const double* b_original,
         x[i] = y[i];
     }
 
+    double* x0 = new double[n + 1];
+    for (int i = 1; i < n + 1; i++) {
+        double sum = 0.0;
+        for (int j = 1; j < n + 1; j++) {
+            sum += A[i][j] * x[j];
+        }
+        x0[i] = sum - b[i];
+    }
+    double x0_norm_inf = vector_norm_inf(x0, n);
+    std::cout << "Convergence rate estimate >= " << (std::log(EPS) - std::log(x0_norm_inf)) / std::log(norm_C_inf) << "\n";
+
     int max_iterations = 1000;
     double err;
     for (int step = 0; step < max_iterations; step++) {
