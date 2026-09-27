@@ -1,6 +1,6 @@
 5 -7 12 4 
-steps = 44
+steps = 50
 tau = 0.05
-err = 6.94961e-08
+err = 4.29307e-09
 Norm_l1 C = 1.2
 Norm_inf C = 0.95

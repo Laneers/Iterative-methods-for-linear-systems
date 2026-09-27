@@ -5,3 +5,4 @@ double matrix_norm_l1(const double* const* A, const int n);
 double vector_norm_inf(const double* v, const int n);
 double matrix_norm_inf(const double* const* A, const int n);
 double residual_norm(const double* const* A, const double* b, const double* x, const int n);
+double residual_norm_three_diag(const double* a, const double* b, const double* c, const double* d, const double* x, const int n);

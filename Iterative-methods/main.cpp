@@ -6,6 +6,7 @@
 #include "Norms.h"
 #include "SimpleIteration.h"
 #include "Jacobi.h"
+#include "Seidel.h"
 
 double EPS = 1e-4;
 //double EPS = 1e-7;
@@ -89,36 +90,42 @@ int main() {
     Jacobi(A, b, x, n, &converged_step, &norm_C, output_filename);
 
     //Tridiagonal matrix
+    std::cout << "\nInput N: ";
     int N;
     std::cin >> N;
     int n_big = 200 + N;
 
-    double* a = new double[n];
-    double* b = new double[n];
-    double* c = new double[n];
-    double* d = new double[n];
+    double* a = new double[n_big + 1];
+    double* b_big = new double[n_big + 1];
+    double* c = new double[n_big + 1];
+    double* d = new double[n_big + 1];
 
-    for (int i = 0; i < n_big; ++i) {
-        b[i] = 4.0;
-        a[i] = 1.0;
-        c[i] = 1.0;
+    for (int i = 1; i < n_big + 1; ++i) {
+        b_big[i] = 4.0;
+        if (i > 1) {
+            a[i] = 1.0;
+        }
+        if (i < n_big) {
+            c[i] = 1.0;
+        }
     }
 
-    for (int idx = 0; idx < n_big; ++idx) {
-        int i = idx + 1;
-
+    for (int i = 1; i < n_big + 1; ++i) {
         if (i == 1) {
-            d[idx] = 6.0;
+            d[i] = 6.0;
         }
         else if (i == n_big) {
-            d[idx] = 9.0 - 3.0 * (n_big % 2);
+            d[i] = 9.0 - 3.0 * (n_big % 2);
         }
         else {
-            d[idx] = 10.0 - 2.0 * (i % 2);
+            d[i] = 10.0 - 2.0 * (i % 2);
         }
     }
 
-
+    //Seidel method
+    double* x_big = new double[n_big + 1]();
+    output_filename = std::string("Seidel") + file_number + '_' + accuracy + ".txt";
+    Seidel(a, b_big, c, d, x_big, n_big, &converged_step, &norm_C, output_filename);
 
     //Destructors
     for (int i = 1; i <= n; i++) {
@@ -128,7 +135,7 @@ int main() {
     delete[] b;
     delete[] x;
     delete[] a;
-    delete[] b;
+    delete[] b_big;
     delete[] c;
     delete[] d;
     return 0;

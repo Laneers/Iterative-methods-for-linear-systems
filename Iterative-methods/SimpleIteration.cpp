@@ -60,7 +60,6 @@ void Simple_iteration(const double* const* A_original, const double* b_original,
 
     *norm_C = norm_C_inf;
 
-    double* x0 = new double[n + 1];
     for (int i = 1; i < n + 1; i++) {
         x[i] = y[i];
     }
@@ -92,7 +91,7 @@ void Simple_iteration(const double* const* A_original, const double* b_original,
             return;
         }
 
-        // Вычисление x_next = C * x + y
+        //x_next = C * x + y
         for (int i = 1; i < n + 1; i++) {
             double sum = 0.0;
             for (int j = 1; j < n + 1; j++) {

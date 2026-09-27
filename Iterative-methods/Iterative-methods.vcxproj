@@ -127,10 +127,12 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Norms.cpp" />
     <ClCompile Include="SimpleIteration.cpp" />
+    <ClCompile Include="Seidel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Jacobi.h" />
     <ClInclude Include="Norms.h" />
+    <ClInclude Include="Seidel.h" />
     <ClInclude Include="SimpleIteration.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

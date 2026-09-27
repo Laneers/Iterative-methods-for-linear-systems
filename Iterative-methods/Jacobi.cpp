@@ -36,7 +36,6 @@ void Jacobi(const double* const* A, const double* b, double* x, const int n, int
 
     *norm_C = norm_C_inf;
 
-    double* x0 = new double[n + 1];
     for (int i = 1; i < n + 1; i++) {
         x[i] = y[i];
     }
@@ -64,7 +63,7 @@ void Jacobi(const double* const* A, const double* b, double* x, const int n, int
             return;
         }
 
-        // Вычисление x_next = C * x + y
+        //x_next = C * x + y
         for (int i = 1; i < n + 1; i++) {
             double sum = 0.0;
             for (int j = 1; j < n + 1; j++) {

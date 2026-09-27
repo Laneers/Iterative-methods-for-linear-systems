@@ -1,5 +1,5 @@
 5 -7 12 4 
-steps = 19
-err = 5.17601e-08
+steps = 21
+err = 6.1918e-09
 Norm_l1 C = 1.31082
 Norm_inf C = 0.909091
