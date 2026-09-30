@@ -126,12 +126,14 @@
     <ClCompile Include="Jacobi.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Norms.cpp" />
+    <ClCompile Include="Relaxation.cpp" />
     <ClCompile Include="SimpleIteration.cpp" />
     <ClCompile Include="Seidel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Jacobi.h" />
     <ClInclude Include="Norms.h" />
+    <ClInclude Include="Relaxation.h" />
     <ClInclude Include="Seidel.h" />
     <ClInclude Include="SimpleIteration.h" />
   </ItemGroup>

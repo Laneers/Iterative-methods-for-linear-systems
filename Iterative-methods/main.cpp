@@ -7,6 +7,7 @@
 #include "SimpleIteration.h"
 #include "Jacobi.h"
 #include "Seidel.h"
+#include "Relaxation.h"
 
 double EPS = 1e-4;
 //double EPS = 1e-7;
@@ -126,6 +127,33 @@ int main() {
     double* x_big = new double[n_big + 1]();
     output_filename = std::string("Seidel") + file_number + '_' + accuracy + ".txt";
     Seidel(a, b_big, c, d, x_big, n_big, &converged_step, &norm_C, output_filename);
+
+    //Relaxation method
+    output_filename = std::string("Seidel") + file_number + '_' + accuracy + ".txt";
+
+    double start_omega = 1.0;
+    double end_omega = 2;
+    double step_omega = 0.05;
+
+    double best_omega = -1;
+    double min_steps_rel = 999999;
+    int converged_step_rel = -1;
+    double norm_C_rel;
+
+    for (double omega = start_omega; omega < end_omega; omega += step_omega) {
+        for (int i = 1; i <= n_big; i++) x_big[i] = 0.0;
+        Relaxation(a, b_big, c, d, x_big, n_big, omega, &converged_step_rel, &norm_C_rel, output_filename);
+        if (converged_step_rel < min_steps_rel && converged_step_rel != -1) {
+            min_steps_rel = converged_step_rel;
+            best_omega = omega;
+        }
+    }
+
+    std::cout << "\nBest experimental omega = " << best_omega
+        << " (converged in " << min_steps_rel << " steps)\n";
+
+    for (int i = 1; i <= n_big; i++) x_big[i] = 0.0;
+    Relaxation(a, b_big, c, d, x_big, n_big, best_omega, &converged_step_rel, &norm_C_rel, output_filename);
 
     //Destructors
     for (int i = 1; i <= n; i++) {
