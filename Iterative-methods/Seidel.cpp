@@ -75,7 +75,7 @@ void Seidel(const double* a, const double* b, const double* c, const double* d, 
         x[i] = y[i];
     }
 
-    int max_iterations = 1000;
+    const int max_iterations = std::max(1000, (int)(k_est * 2));
     double* x_old = new double[n + 1];
     double* diff = new double[n + 1];
     double diff_norm;

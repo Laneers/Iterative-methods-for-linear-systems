@@ -57,6 +57,10 @@ void Simple_iteration(const double* const* A_original, const double* b_original,
     std::cout << "||C||_l1 = " << norm_C_l1 << "\n";
     std::cout << "||C||_inf = " << norm_C_inf << "\n";
 
+    if (norm_C_inf >= 1.0) {
+        std::cerr << "||C||_inf >= 1. Method may not converge\n";
+    }
+
     *norm_C = norm_C_inf;
 
     for (int i = 1; i < n + 1; i++) {
@@ -77,7 +81,7 @@ void Simple_iteration(const double* const* A_original, const double* b_original,
     std::cout << "Convergence rate estimate >= " << k_est << "\n";
     delete[] x0;
 
-    int max_iterations = 1000;
+    const int max_iterations = std::max(1000, (int)(k_est * 2));
     double* x_old = new double[n + 1];
     double* diff = new double[n + 1];
     double diff_norm;
