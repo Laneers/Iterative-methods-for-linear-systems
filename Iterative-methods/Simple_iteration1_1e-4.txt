@@ -1,6 +1,8 @@
 5 -7 12 4 
-steps = 35
+k_est >= 256.387
+steps = 29
 tau = 0.05
-err = 4.52635e-06
+diff_norm = 3.63281e-06
+err_norm = 4.60691e-05
 Norm_l1 C = 1.2
 Norm_inf C = 0.95

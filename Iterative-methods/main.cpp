@@ -11,6 +11,7 @@
 
 double EPS = 1e-4;
 //double EPS = 1e-7;
+double EPS0 = 1e-14;
 
 int main() {
     //Reading from file
@@ -149,8 +150,7 @@ int main() {
         }
     }
 
-    std::cout << "\nBest experimental omega = " << best_omega
-        << " (converged in " << min_steps_rel << " steps)\n";
+    std::cout << "\nBest experimental omega = " << best_omega << " (converged in " << min_steps_rel << " steps)\n";
 
     for (int i = 1; i <= n_big; i++) x_big[i] = 0.0;
     Relaxation(a, b_big, c, d, x_big, n_big, best_omega, &converged_step_rel, &norm_C_rel, output_filename);

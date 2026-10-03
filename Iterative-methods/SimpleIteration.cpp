@@ -4,6 +4,7 @@
 #include "Norms.h"
 
 extern double EPS;
+extern double EPS0;
 
 void Simple_iteration(const double* const* A_original, const double* b_original, double* x, const int n, const double tau, int* converged_step, \
     double* norm_C, const std::string output_filename) {
@@ -14,11 +15,9 @@ void Simple_iteration(const double* const* A_original, const double* b_original,
     double* b = new double[n + 1];
 
     for (int i = 1; i < n + 1; ++i) {
+        b[i] = b_original[i];
         for (int j = 1; j < n + 1; ++j) {
             A[i][j] = A_original[i][j];
-            if (j == n) {
-                b[i] = b_original[i];
-            }
         }
     }
 
@@ -72,23 +71,54 @@ void Simple_iteration(const double* const* A_original, const double* b_original,
         }
         x0[i] = sum - b[i];
     }
-    double x0_norm_inf = vector_norm_inf(x0, n);
-    std::cout << "Convergence rate estimate >= " << (std::log(EPS) - std::log(x0_norm_inf)) / std::log(norm_C_inf) << "\n";
+    double x0_norm = vector_norm_inf(x0, n);
+ 
+    double k_est = (log(EPS) - log(x0_norm)) / log(norm_C_inf);
+    std::cout << "Convergence rate estimate >= " << k_est << "\n";
+    delete[] x0;
 
     int max_iterations = 1000;
-    double err;
+    double* x_old = new double[n + 1];
+    double* diff = new double[n + 1];
+    double diff_norm;
+    double criterion;
     for (int step = 0; step < max_iterations; step++) {
-        err = residual_norm(A_original, b_original, x, n);
-        if (err < EPS * ((1 - norm_C_inf) / norm_C_inf)) {
+        for (int i = 1; i < n + 1; i++) {
+            x_old[i] = x[i];
+        }
+
+        //x_next = C * x + y
+        for (int i = 1; i < n + 1; i++) {
+            double sum = 0.0;
+            for (int j = 1; j < n + 1; j++) {
+                sum += C[i][j] * x[j];
+            }
+            x[i] = sum + y[i];
+        }
+
+        //Different stopping criteria 
+        //double x_old_norm = vector_norm_inf(x_old, n);
+        for (int i = 1; i < n + 1; i++) {
+            diff[i] = x[i] - x_old[i];
+            //diff[i] = (x[i] - x_old[i]) / (x_old_norm + EPS0);
+        }
+        diff_norm = vector_norm_inf(diff, n);
+        criterion = EPS * ((1 - norm_C_inf) / norm_C_inf);
+        //criterion = EPS;
+        //criterion = EPS * x_old_norm + EPS0;
+
+        if (diff_norm <= criterion) {
             std::cout << "Method converged in " << step << " iterations\n";
             *converged_step = step;
             std::ofstream out(output_filename);
             for (int i = 1; i <= n; i++) {
                 out << x[i] << ' ';
             }
+            out << "\nk_est >= " << k_est;
             out << "\nsteps = " << step;
             out << "\ntau = " << tau;
-            out << "\nerr = " << err;
+            out << "\ndiff_norm = " << diff_norm;
+            out << "\nerr_norm = " << residual_norm(A_original, b_original, x, n);
             out << "\nNorm_l1 C = " << norm_C_l1;
             out << "\nNorm_inf C = " << norm_C_inf;
             out.close();
@@ -99,16 +129,8 @@ void Simple_iteration(const double* const* A_original, const double* b_original,
             delete[] A;
             delete[] b;
             delete[] y;
+            delete[] x_old;
             return;
-        }
-
-        //x_next = C * x + y
-        for (int i = 1; i < n + 1; i++) {
-            double sum = 0.0;
-            for (int j = 1; j < n + 1; j++) {
-                sum += C[i][j] * x[j];
-            }
-            x[i] = sum + y[i];
         }
     }
 
@@ -121,5 +143,6 @@ void Simple_iteration(const double* const* A_original, const double* b_original,
     delete[] A;
     delete[] b;
     delete[] y;
+    delete[] x_old;
     return;
 }

@@ -61,9 +61,11 @@ void Relaxation(const double* a, const double* b, const double* c, const double*
     std::cout << "||C_U||_inf = " << norm_C_U_inf << "\n";
     std::cout << "||C_L||_inf + ||C_U||_inf = " << sum_norms << "\n";
 
+    double k_est = 0.;
     if (sum_norms < 1.0) {
-        double q = norm_C_U_inf / (1 - norm_C_L_inf);
-        std::cout << "Convergence rate estimate (based on sum of norms) >= " << std::log(EPS) / std::log(q) << "\n";
+        double q_omega = (std::abs(1.0 - omega) + omega * norm_C_U_inf) / (1.0 - omega * norm_C_L_inf);
+        k_est = log(EPS) / log(q_omega);
+        std::cout << "Convergence rate estimate (based on sum of norms) >= " << k_est << "\n";
     }
     else {
         std::cout << "Sum of norms >= 1. Convergence is not guaranteed by this criterion.\n";
@@ -74,31 +76,11 @@ void Relaxation(const double* a, const double* b, const double* c, const double*
     }
 
     int max_iterations = 1000;
-    double err;
-    double* x_old = new double[n + 2]();
-
+    double* x_old = new double[n + 1];
+    double* diff = new double[n + 1];
+    double diff_norm;
+    double criterion;
     for (int step = 0; step < max_iterations; step++) {
-        err = residual_norm_three_diag(a, b, c, d, x, n);
-        if (err < EPS * ((1 - norm_C_inf) / norm_C_U_inf)) {
-            std::cout << "Method converged in " << step << " iterations\n";
-            *converged_step = step;
-            std::ofstream out(output_filename);
-            for (int i = 1; i <= n; i++) {
-                out << x[i] << ' ';
-            }
-            out << "\nsteps = " << step;
-            out << "\nerr = " << err;
-            out << "\nNorm_l1 C = " << norm_C_l1;
-            out << "\nNorm_inf C = " << norm_C_inf;
-            out.close();
-            for (int i = 1; i <= n; i++) {
-                delete[] C[i];
-            }
-            delete[] C;
-            delete[] y;
-            delete[] x_old;
-            return;
-        }
         for (int i = 1; i <= n; i++) {
             x_old[i] = x[i];
         }
@@ -111,6 +93,42 @@ void Relaxation(const double* a, const double* b, const double* c, const double*
                 sum -= c[i] * x_old[i + 1];
             }
             x[i] = (1.0 - omega) * x_old[i] + (omega * sum) / b[i];
+        }
+
+        //Different stopping criteria 
+        //double x_old_norm = vector_norm_inf(x_old, n);
+        for (int i = 1; i < n + 1; i++) {
+            diff[i] = x[i] - x_old[i];
+            //diff[i] = (x[i] - x_old[i]) / (x_old_norm + EPS0);
+        }
+        diff_norm = vector_norm_inf(diff, n);
+
+        criterion = EPS * ((1 - norm_C_inf) / norm_C_U_inf);
+        //criterion = EPS * ((1 - norm_C_inf) / norm_C_inf);
+        //criterion = EPS;
+        //criterion = EPS * x_old_norm + EPS0;
+
+        if (diff_norm <= criterion) {
+            std::cout << "Method converged in " << step << " iterations\n";
+            *converged_step = step;
+            std::ofstream out(output_filename);
+            for (int i = 1; i <= n; i++) {
+                out << x[i] << ' ';
+            }
+            out << "\nk_est >= " << k_est;
+            out << "\nsteps = " << step;
+            out << "\ndiff_norm = " << diff_norm;
+            out << "\nerr_norm = " << residual_norm_three_diag(a, b, c, d, x, n);
+            out << "\nNorm_l1 C = " << norm_C_l1;
+            out << "\nNorm_inf C = " << norm_C_inf;
+            out.close();
+            for (int i = 1; i <= n; i++) {
+                delete[] C[i];
+            }
+            delete[] C;
+            delete[] y;
+            delete[] x_old;
+            return;
         }
     }
 
