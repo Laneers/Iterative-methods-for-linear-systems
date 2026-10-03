@@ -130,7 +130,7 @@ int main() {
     Seidel(a, b_big, c, d, x_big, n_big, &converged_step, &norm_C, output_filename);
 
     //Relaxation method
-    output_filename = std::string("Seidel") + file_number + '_' + accuracy + ".txt";
+    output_filename = std::string("Relaxation") + file_number + '_' + accuracy + ".txt";
 
     double start_omega = 1.0;
     double end_omega = 2;
