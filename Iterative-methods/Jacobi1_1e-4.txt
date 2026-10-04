@@ -1,5 +1,5 @@
 5 -7 12 4 
-k_est >= 137.536
+k_est >= 133.705
 steps = 12
 diff_norm = 5.82831e-06
 err_norm = 3.02358e-05

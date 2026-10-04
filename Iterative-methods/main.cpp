@@ -59,10 +59,10 @@ int main() {
     std::string output_filename = std::string("Simple_iteration") + file_number + '_' + accuracy + ".txt";
 
     //Experimental determination of tau for simple iteration method
-    double tau_theor = 1 / matrix_norm_l1(A, n);
+    double tau_theor = 1 / matrix_norm_inf(A, n);
     double tau_limit = 2 * tau_theor;
 
-    double step_tau = tau_limit / 20.0;
+    double step_tau = tau_limit / 50.0;
     double start_tau = step_tau;
     double end_tau = tau_limit * 1.2;
 
@@ -143,7 +143,7 @@ int main() {
 
     for (double omega = start_omega; omega < end_omega; omega += step_omega) {
         for (int i = 1; i <= n_big; i++) x_big[i] = 0.0;
-        Relaxation(a, b_big, c, d, x_big, n_big, omega, &converged_step_rel, &norm_C_rel, output_filename);
+        Relaxation_triag(a, b_big, c, d, x_big, n_big, omega, &converged_step_rel, &norm_C_rel, output_filename);
         if (converged_step_rel < min_steps_rel && converged_step_rel != -1) {
             min_steps_rel = converged_step_rel;
             best_omega = omega;
@@ -153,7 +153,7 @@ int main() {
     std::cout << "\nBest experimental omega = " << best_omega << " (converged in " << min_steps_rel << " steps)\n";
 
     for (int i = 1; i <= n_big; i++) x_big[i] = 0.0;
-    Relaxation(a, b_big, c, d, x_big, n_big, best_omega, &converged_step_rel, &norm_C_rel, output_filename);
+    Relaxation_triag(a, b_big, c, d, x_big, n_big, best_omega, &converged_step_rel, &norm_C_rel, output_filename);
 
     //Destructors
     for (int i = 1; i <= n; i++) {
