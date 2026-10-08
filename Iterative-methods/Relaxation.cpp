@@ -109,7 +109,7 @@ void Relaxation_triag(const double* a, const double* b, const double* c, const d
     delete[] rho_vec;
 
     if (!flag) {
-        const int max_iterations = std::max(1000, (int)(k_est * 2));
+        const int max_iterations = std::max(100000, (int)(k_est * 2));
         double* x_old = new double[n + 1];
         double* diff = new double[n + 1];
         double diff_norm;
@@ -132,13 +132,14 @@ void Relaxation_triag(const double* a, const double* b, const double* c, const d
             //Different stopping criteria 
             double x_old_norm = vector_norm_inf(x_old, n);            //3
             for (int i = 1; i < n + 1; i++) {
-                //diff[i] = x[i] - x_old[i];                          //1
-                diff[i] = (x[i] - x_old[i]) / (x_old_norm + EPS0);    //3
+                diff[i] = x[i] - x_old[i];                          //1, 2
+                //diff[i] = (x[i] - x_old[i]) / (x_old_norm + EPS0);    //3
             }
             diff_norm = vector_norm_inf(diff, n);                 
+            //diff_norm = residual_norm_three_diag(a, b, c, d, x, n);
 
-            //criterion = EPS * ((1 - norm_C_inf) / norm_C_U_inf);    //1
-            criterion = EPS;                                          //2, 3
+            criterion = EPS * ((1 - norm_C_inf) / norm_C_U_inf);    //1
+            //criterion = EPS;                                          //2, 3, res
 
             if (diff_norm <= criterion) {
                 std::cout << "Method converged in " << step << " iterations\n";
@@ -154,6 +155,7 @@ void Relaxation_triag(const double* a, const double* b, const double* c, const d
                 out << "\nNorm_l1 C = " << norm_C_l1;
                 out << "\nNorm_inf C = " << norm_C_inf;
                 out.close();
+                std::cout << "\nerr_norm = " << residual_norm_three_diag(a, b, c, d, x, n);
                 for (int i = 1; i <= n; i++) {
                     delete[] C[i];
                     delete[] C_U[i];

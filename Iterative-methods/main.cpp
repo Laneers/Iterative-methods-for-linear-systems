@@ -155,6 +155,8 @@ int main() {
     for (int i = 1; i <= n_big; i++) x_big[i] = 0.0;
     Relaxation_triag(a, b_big, c, d, x_big, n_big, best_omega, &converged_step_rel, &norm_C_rel, output_filename);
 
+    Relaxation_triag(a, b_big, c, d, x_big, n_big, 1.3, &converged_step_rel, &norm_C_rel, output_filename, 1);
+
     //Destructors
     for (int i = 1; i <= n; i++) {
         delete[] A[i];

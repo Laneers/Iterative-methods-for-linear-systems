@@ -111,10 +111,12 @@ void Simple_iteration(const double* const* A_original, const double* b_original,
             //Different stopping criteria 
             double x_old_norm = vector_norm_inf(x_old, n);          //3
             for (int i = 1; i < n + 1; i++) {
-                //diff[i] = x[i] - x_old[i];                        //1, 2
-                diff[i] = (x[i] - x_old[i]) / (x_old_norm + EPS0);  //3
+                diff[i] = x[i] - x_old[i];                        //1, 2
+                //diff[i] = (x[i] - x_old[i]) / (x_old_norm + EPS0);  //3
             }
-            diff_norm = vector_norm_inf(diff, n);
+            //diff_norm = vector_norm_inf(diff, n);
+            diff_norm = residual_norm(A, b, x, n);
+
             //criterion = EPS * ((1 - norm_C_inf) / norm_C_inf);    //1
             criterion = EPS;                                        //2, 3
 

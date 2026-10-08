@@ -93,7 +93,8 @@ void Jacobi(const double* const* A, const double* b, double* x, const int n, int
                 //diff[i] = x[i] - x_old[i];                          //1, 2
                 diff[i] = (x[i] - x_old[i]) / (x_old_norm + EPS0);    //3
             }
-            diff_norm = vector_norm_inf(diff, n);
+            //diff_norm = vector_norm_inf(diff, n);
+            diff_norm = residual_norm(A, b, x, n);
 
             //criterion = EPS * ((1 - norm_C_inf) / norm_C_inf);      //1
             criterion = EPS;                                          //2, 3
