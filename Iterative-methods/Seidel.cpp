@@ -58,9 +58,13 @@ void Seidel(const double* a, const double* b, const double* c, const double* d, 
 
     double norm_G1_inf = matrix_norm_inf(C_L, n);
     for (int i = 1; i <= n; i++) {
-        G2[i][i] = C[i][i];
         for (int j = 1; j <= n; j++) {
-            G2[i][j] = C_U[i][j];
+            if (i == j) {
+                G2[i][j] = C[i][i];
+            }
+            else {
+                G2[i][j] = C_U[i][j];
+            }
         }
     }
     double norm_G2_inf = matrix_norm_inf(G2, n);

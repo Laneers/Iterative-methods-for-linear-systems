@@ -127,7 +127,7 @@ int main() {
     //Seidel method
     double* x_big = new double[n_big + 1]();
     output_filename = std::string("Seidel") + file_number + '_' + accuracy + ".txt";
-    Seidel(a, b_big, c, d, x_big, n_big, &converged_step, &norm_C, output_filename);
+    Seidel(a, b_big, c, d, x_big, n_big, &converged_step, &norm_C, output_filename, 1);
 
     //Relaxation method
     output_filename = std::string("Relaxation") + file_number + '_' + accuracy + ".txt";
@@ -155,7 +155,7 @@ int main() {
     for (int i = 1; i <= n_big; i++) x_big[i] = 0.0;
     Relaxation_triag(a, b_big, c, d, x_big, n_big, best_omega, &converged_step_rel, &norm_C_rel, output_filename);
 
-    Relaxation_triag(a, b_big, c, d, x_big, n_big, 1.3, &converged_step_rel, &norm_C_rel, output_filename, 1);
+    Relaxation_triag(a, b_big, c, d, x_big, n_big, 0.7, &converged_step_rel, &norm_C_rel, output_filename);
 
     //Destructors
     for (int i = 1; i <= n; i++) {
