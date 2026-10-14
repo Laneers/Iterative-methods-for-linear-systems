@@ -12,6 +12,7 @@ double powerMethod(double** A, int n, double eps = 1e-6, int max_iter = 1000) {
         phi[i] = 1.0;
     }
 
+    double next_lambda = 0.0;
     double lambda = 0.0;
 
     for (int step = 0; step < max_iter; step++) {
@@ -27,7 +28,12 @@ double powerMethod(double** A, int n, double eps = 1e-6, int max_iter = 1000) {
             next_phi[i] = sum / norm_phi;
         }
 
-        lambda = vector_norm_2(next_phi, n);
+        next_lambda = vector_norm_2(next_phi, n);
+
+        if (step > 0 && std::abs(next_lambda - lambda) < eps) {
+            lambda = next_lambda;
+            break;
+        }
 
         for (int i = 1; i <= n; i++) {
             phi[i] = next_phi[i];
