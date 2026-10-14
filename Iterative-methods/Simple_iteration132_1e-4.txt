@@ -1,8 +1,8 @@
--7 7 2 -6 
+-6.99996 7 2 -6 
 k_est >= 31.1265
-steps = 19
+steps = 15
 tau = 0.0131231
-diff_norm = 8.32854e-05
-err_norm = 8.32854e-05
+diff_norm = 3.92517e-05
+err_norm = 0.00142406
 Norm_l1 C = 0.750891
 Norm_inf C = 0.705254

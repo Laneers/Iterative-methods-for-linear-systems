@@ -146,7 +146,7 @@ void Relaxation_triag(const double* a, const double* b, const double* c, const d
             criterion = EPS;                                          //2, 3, res
 
             if (diff_norm <= criterion) {
-                std::cout << "Method converged in " << step << " iterations\n";
+                std::cout << step << " iterations completed\n";
                 *converged_step = step;
                 std::ofstream out(output_filename);
                 for (int i = 1; i <= n; i++) {

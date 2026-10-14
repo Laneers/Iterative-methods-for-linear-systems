@@ -46,6 +46,14 @@ double matrix_norm_inf(const double* const* A, const int n) {
     return max_row_sum;
 }
 
+double vector_norm_2(const double* x, int n) {
+    double sum = 0.0;
+    for (int i = 1; i <= n; i++) {
+        sum += x[i] * x[i];
+    }
+    return std::sqrt(sum);
+}
+
 double residual_norm(const double* const* A, const double* b, const double* x, const int n) {
     double max_res = 0.0;
     double r;

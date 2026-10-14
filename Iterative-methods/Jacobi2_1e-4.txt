@@ -1,5 +1,7 @@
 10 -10 12 4 
+k_est >= 7.11597
 steps = 4
-err = 0.000132956
+diff_norm = 4.84996e-06
+err_norm = 4.84996e-06
 Norm_l1 C = 0.235593
 Norm_inf C = 0.260814

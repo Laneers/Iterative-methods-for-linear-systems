@@ -100,7 +100,7 @@ void Jacobi(const double* const* A, const double* b, double* x, const int n, int
             criterion = EPS;                                          //2, 3
 
             if (diff_norm <= criterion) {
-                std::cout << "Method converged in " << step << " iterations\n";
+                std::cout << step << " iterations completed\n";
                 *converged_step = step;
                 std::ofstream out(output_filename);
                 for (int i = 1; i <= n; i++) {

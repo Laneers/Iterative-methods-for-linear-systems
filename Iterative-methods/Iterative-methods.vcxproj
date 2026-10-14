@@ -123,6 +123,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Eigenvalues.cpp" />
     <ClCompile Include="Jacobi.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Norms.cpp" />
@@ -131,6 +132,7 @@
     <ClCompile Include="Seidel.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Eigenvalues.h" />
     <ClInclude Include="Jacobi.h" />
     <ClInclude Include="Norms.h" />
     <ClInclude Include="Relaxation.h" />

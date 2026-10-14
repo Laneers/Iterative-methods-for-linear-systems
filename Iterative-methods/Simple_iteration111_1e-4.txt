@@ -1,0 +1,8 @@
+-3.42698e+305 1.23731e+307 -inf -inf 
+k_est >= -nan(ind)
+steps = 46
+tau = 1.95312
+diff_norm = 0
+err_norm = 0
+Norm_l1 C = 4575.13
+Norm_inf C = 4107.98

@@ -8,11 +8,24 @@ extern double EPS0;
 
 void Simple_iteration(const double* const* A_original, const double* b_original, double* x, const int n, const double tau, int* converged_step, \
     double* norm_C, const std::string output_filename, bool flag = 0) {
+
     double** A = new double* [n + 1];
     for (int i = 1; i < n + 1; i++) {
         A[i] = new double[n + 1];
     }
     double* b = new double[n + 1];
+
+    ////A_sym = A^T * A  è  b_sym = A^T * b
+    //for (int i = 1; i <= n; ++i) {
+    //    for (int k = 1; k <= n; ++k) {
+    //        b[i] += A_original[k][i] * b_original[k];
+    //    }
+    //    for (int j = 1; j <= n; ++j) {
+    //        for (int k = 1; k <= n; ++k) {
+    //            A[i][j] += A_original[k][i] * A_original[k][j];
+    //        }
+    //    }
+    //}
 
     for (int i = 1; i < n + 1; ++i) {
         b[i] = b_original[i];
@@ -21,12 +34,14 @@ void Simple_iteration(const double* const* A_original, const double* b_original,
         }
     }
 
-    //Making all diagonal elements positive
-    for (int i = 1; i < n + 1; ++i) {
-        if (A[i][i] < 0.0) {
-            b[i] = -b[i];
-            for (int j = 1; j < n + 1; ++j) {
-                A[i][j] = -A[i][j];
+    if (tau > 0) {
+        //Making all diagonal elements positive
+        for (int i = 1; i < n + 1; ++i) {
+            if (A[i][i] < 0.0) {
+                b[i] = -b[i];
+                for (int j = 1; j < n + 1; ++j) {
+                    A[i][j] = -A[i][j];
+                }
             }
         }
     }
@@ -83,8 +98,14 @@ void Simple_iteration(const double* const* A_original, const double* b_original,
     }
     double rho_0 = vector_norm_inf(rho_vec, n);
  
-    double k_est = (log(EPS) + log(1 - norm_C_inf) - log(rho_0)) / log(norm_C_inf);
-    std::cout << "Convergence rate estimate >= " << k_est << "\n";
+    double k_est = 0.0;
+    if (norm_C_inf < 1.0) {
+        k_est = (log(EPS) + log(1.0 - norm_C_inf) - log(rho_0)) / log(norm_C_inf);
+        std::cout << "Convergence rate estimate >= " << k_est << "\n";
+    }
+    else {
+        std::cout << "||C||_inf = " << norm_C_inf << " (>= 1). Checking convergence via iterations...\n";
+    }
     delete[] x1;
     delete[] rho_vec;
 
@@ -114,14 +135,14 @@ void Simple_iteration(const double* const* A_original, const double* b_original,
                 diff[i] = x[i] - x_old[i];                        //1, 2
                 //diff[i] = (x[i] - x_old[i]) / (x_old_norm + EPS0);  //3
             }
-            //diff_norm = vector_norm_inf(diff, n);
-            diff_norm = residual_norm(A, b, x, n);
+            diff_norm = vector_norm_inf(diff, n);
+            //diff_norm = residual_norm(A, b, x, n);
 
-            //criterion = EPS * ((1 - norm_C_inf) / norm_C_inf);    //1
-            criterion = EPS;                                        //2, 3
+            criterion = EPS * ((1 - norm_C_inf) / norm_C_inf);    //1
+            //criterion = EPS;                                        //2, 3
 
             if (diff_norm <= criterion) {
-                std::cout << "Method converged in " << step << " iterations\n";
+                std::cout << step << " iterations completed\n";
                 *converged_step = step;
                 std::ofstream out(output_filename);
                 for (int i = 1; i <= n; i++) {

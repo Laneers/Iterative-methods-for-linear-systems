@@ -1,0 +1,8 @@
+-nan(ind) -nan(ind) -nan(ind) -nan(ind) 
+k_est >= -nan(ind)
+steps = 0
+tau = inf
+diff_norm = 0
+err_norm = 0
+Norm_l1 C = inf
+Norm_inf C = inf

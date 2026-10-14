@@ -1,0 +1,7 @@
+-inf -inf -nan(ind) -nan(ind) 
+k_est >= -nan(ind)
+steps = 418
+diff_norm = 0
+err_norm = 0
+Norm_l1 C = 148.023
+Norm_inf C = 126.591

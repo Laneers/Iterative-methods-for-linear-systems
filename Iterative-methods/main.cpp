@@ -8,6 +8,7 @@
 #include "Jacobi.h"
 #include "Seidel.h"
 #include "Relaxation.h"
+#include "Eigenvalues.h"
 
 double EPS = 1e-4;
 //double EPS = 1e-7;
@@ -62,6 +63,13 @@ int main() {
     double tau_theor = 1 / matrix_norm_inf(A, n);
     double tau_limit = 2 * tau_theor;
 
+    double lambda_max, lambda_min;
+	findEigenvalues(A, n, lambda_max, lambda_min);
+	double tau_opt = 2 / (lambda_max + lambda_min);
+	std::cout << "Optimal tau = " << tau_opt << "\n";
+	std::cout << "lambda_min = " << lambda_min << "\n";
+	std::cout << "lambda_max = " << lambda_max << "\n";
+
     double step_tau = tau_limit / 50.0;
     double start_tau = step_tau;
     double end_tau = tau_limit * 1.2;
@@ -86,6 +94,9 @@ int main() {
         Simple_iteration(A, b, x, n, best_tau, &converged_step, &norm_C, output_filename);
         std::cout << "\nExperimental tau: " << best_tau << " (converged in " << min_steps << ", norm_inf C = " << norm_C << ")\n\n";
     }
+    Simple_iteration(A, b, x, n, tau_opt, &converged_step, &norm_C, output_filename);
+    std::cout << "\nOptimal tau: " << tau_opt << " (converged in " << converged_step << ", norm_inf C = " << norm_C << ")\n\n";
+
 
     //Jacobi method
     output_filename = std::string("Jacobi") + file_number + '_' + accuracy + ".txt";
@@ -122,6 +133,30 @@ int main() {
         else {
             d[i] = 10.0 - 2.0 * (i % 2);
         }
+    }
+
+    // 2. БЛОК ПЕРЕСТАНОВКИ: меняем уравнения i и i+1 местами
+// Для трехдиагональной структуры перестановка строк i и i+1 эквивалентна взаимному обмену 
+// их коэффициентов, но с учетом сдвига индексов относительно главной диагонали.
+    for (int i = 1; i < n_big; i += 2) {
+        // Переставляем элементы правой части (вектор d)
+        std::swap(d[i], d[i + 1]);
+
+        // Переставляем элементы на главной диагонали (массив b_big)
+        std::swap(b_big[i], b_big[i + 1]);
+
+        // Корректируем боковые элементы, так как при сдвиге строк 
+        // бывшие диагональные элементы уходят на позиции a и c
+        if (i > 1) {
+            std::swap(a[i], a[i + 1]);
+        }
+        if (i + 1 < n_big) {
+            std::swap(c[i], c[i + 1]);
+        }
+
+        // Особое внимание элементу пересечения этих двух строк:
+        // c[i] (над диагональю i) и a[i+1] (под диагональю i+1) меняются ролями
+        std::swap(c[i], a[i + 1]);
     }
 
     //Seidel method
