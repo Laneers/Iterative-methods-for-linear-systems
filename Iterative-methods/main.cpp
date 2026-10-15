@@ -63,12 +63,22 @@ int main() {
     double tau_theor = 1 / matrix_norm_inf(A, n);
     double tau_limit = 2 * tau_theor;
 
+    double** A_pos = new double* [n + 1];
+    double* b_pos = new double[n + 1];
+    for (int i = 1; i <= n; i++) {
+        A_pos[i] = new double[n + 1];
+        double s = (A[i][i] < 0.0) ? -1.0 : 1.0;
+        b_pos[i] = s * b[i];
+        for (int j = 1; j <= n; j++) {
+            A_pos[i][j] = s * A[i][j];
+        }
+    }
     double lambda_max, lambda_min;
-	findEigenvalues(A, n, lambda_max, lambda_min);
-	double tau_opt = 2 / (lambda_max + lambda_min);
-	std::cout << "Optimal tau = " << tau_opt << "\n";
-	std::cout << "lambda_min = " << lambda_min << "\n";
-	std::cout << "lambda_max = " << lambda_max << "\n";
+    findEigenvalues(A_pos, n, lambda_max, lambda_min);
+    double tau_opt = 2 / (lambda_max + lambda_min);
+    std::cout << "Optimal tau = " << tau_opt << "\n";
+    std::cout << "lambda_min = " << lambda_min << "\n";
+    std::cout << "lambda_max = " << lambda_max << "\n";
 
     double step_tau = tau_limit / 50.0;
     double start_tau = step_tau;

@@ -35,6 +35,8 @@ double powerMethod(double** A, int n, double eps = 1e-6, int max_iter = 1000) {
             break;
         }
 
+        lambda = next_lambda;
+
         for (int i = 1; i <= n; i++) {
             phi[i] = next_phi[i];
         }
